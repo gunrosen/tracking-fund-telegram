@@ -13,7 +13,7 @@ interface TrackingJob {
 }
 
 const ENVIRONMENT = {
-  "fxb_stag": {
+  "fxb_staging": {
     tracking: [
       {
         text: "fxb_stag backend",
@@ -30,6 +30,24 @@ const ENVIRONMENT = {
         min: 100
       }
     ]
+  },
+  "fxb_prod": {
+    tracking: [
+      {
+        text: "fxb_prod backend",
+        chain: Web3SupportNetwork.BSC_MAINNET,
+        type: TrackingType.NATIVE,
+        destination: '0x96D7D0CB2af031820Bc6D563ecA14FE4044f1C50',
+        min: 0.1
+      },
+      {
+        text: "fxb_prod LINK fund",
+        chain: Web3SupportNetwork.BSC_MAINNET,
+        type: TrackingType.LINK,
+        destination: '962',
+        min: 100
+      }
+    ]
   }
 }
 const alertBalance = async () => {
@@ -38,7 +56,7 @@ const alertBalance = async () => {
   // clientTelegram.on((event) => {
   //   console.log(event)
   // })
-  const fxbStaging = ENVIRONMENT["fxb_stag"]
+  const fxbStaging = ENVIRONMENT["fxb_prod"]
   for (const tracking of fxbStaging.tracking) {
     const {text, chain, destination, type, min} = tracking
     console.log(`${text} in ${chain}`)
@@ -59,9 +77,8 @@ const alertBalance = async () => {
       const {balance, owner} = subscription
       if (balance <= min) {
         const vrf = getVrf(chain)
-        const message = `${text} in ${chain} running out.`
-          + "\n" +`Please send LINK token to ${owner}.`
-          + "\n"+`Then please add fund with function in ${vrf.subscriptionLink}/${subscriptionId} `
+        const message = `${text} in ${chain} running out. (under ${min} LINK)`
+          + "\n"+`Fund subscription: ${vrf.subscriptionLink}/${subscriptionId} `
         const service = new TelegramService()
         await service.sendMessage( "2033157833", message)
       }
