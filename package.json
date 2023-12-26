@@ -21,7 +21,8 @@
     "telegram-live": "nodemon src/telegram/telegram-live.ts",
     "alert-balance": "nodemon src/bot/alertBalance.ts",
     "test-vrf": "nodemon src/contracts/chainlink/vrf.ts",
-    "test": "jest"
+    "test": "jest",
+    "build": "rm -rf dist && tsc"
   },
   "repository": {
     "type": "git",

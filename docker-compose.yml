@@ -1,0 +1,38 @@
+version: '3.8'
+services:
+  alert-balance:
+    container_name: alert_balance
+    image: alert_balance:1.0
+    networks:
+      - social-network
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - ./.env
+    depends_on:
+      - redis
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 20000
+        hard: 40000
+    restart: unless-stopped
+
+  redis:
+    container_name: alert_balance_redis
+    image: redis:latest
+    networks:
+      - social-network
+    volumes:
+      # - ./redis_data:/data:delegated
+      - ./config/redis/redis.conf:/usr/local/etc/redis/redis-custom.conf:cached
+    restart: unless-stopped
+    command: ["redis-server", "--include /usr/local/etc/redis/redis-custom.conf"]
+
+networks:
+  social-network:
+    driver: bridge
+
+volumes:
+  redis_data:

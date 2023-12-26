@@ -1,0 +1,14 @@
+{
+  "apps": [
+    {
+      "name": "telegram-live",
+      "script": "./dist/src/execution/executeTelegramLive.js",
+      "watch": true
+    },
+    {
+      "name": "alert-balance",
+      "script": "./dist/src/execution/executeAlertBalance.js",
+      "watch": true
+    }
+  ]
+}
