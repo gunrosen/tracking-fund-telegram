@@ -16,7 +16,7 @@ interface TrackingJob {
 
 const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379'
 
-const alertBalance = async () => {
+export const alertBalance = async () => {
   const redis = new Redis(REDIS_URL)
 
   for (const env in ENVIRONMENT) {
@@ -64,4 +64,4 @@ const alertBalance = async () => {
 }
 
 
-alertBalance()
+// alertBalance()
