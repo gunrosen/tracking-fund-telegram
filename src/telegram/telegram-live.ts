@@ -143,7 +143,7 @@ export const telegramGoLive = async () => {
         if (watchList.length > 0) {
             await client.sendMessage(chatId, {message: `You registered ${watchList.join(",")}`})
         } else {
-            await client.sendMessage(chatId, {message: `You do not registered`})
+            await client.sendMessage(chatId, {message: `You are not registered`})
         }
     }
 
