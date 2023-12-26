@@ -2,7 +2,7 @@ import {TrackingType, Web3SupportNetwork} from "../types";
 import {getLotterySignerAddress, getNativeBalance} from "../contracts";
 import {getVrf, getVrfSubscriptionInfo} from "../contracts/chainlink/vrf";
 import Redis from 'ioredis'
-import {REDIS_PUBSUB_CHANNEL_NAME} from "../utils/constants";
+import {ENVIRONMENT, REDIS_PUBSUB_CHANNEL_NAME} from "../utils/constants";
 import {getExploreLink} from "../utils/util";
 
 // env, chain, text, balance, limit
@@ -14,43 +14,8 @@ interface TrackingJob {
   min: number,
 }
 
-const ENVIRONMENT = {
-  "fxb_stag": [
-    {
-      text: "Backend",
-      chain: Web3SupportNetwork.BSC_TESTNET,
-      type: TrackingType.NATIVE,
-      destination: '0xC84F9b16e48649732674F2Af237335CCFB91517f',
-      min: 0.1
-    },
-    {
-      text: "LINK fund",
-      chain: Web3SupportNetwork.BSC_TESTNET,
-      type: TrackingType.LINK,
-      destination: '3130',
-      min: 100
-    }
-  ]
-  ,
-  "fxb_prod": [
-    {
-      text: "Backend",
-      chain: Web3SupportNetwork.BSC_MAINNET,
-      type: TrackingType.NATIVE,
-      destination: '0x96D7D0CB2af031820Bc6D563ecA14FE4044f1C50',
-      min: 0.2
-    },
-    {
-      text: "LINK fund",
-      chain: Web3SupportNetwork.BSC_MAINNET,
-      type: TrackingType.LINK,
-      destination: '962',
-      min: 100
-    }
-  ]
-}
-
 const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379'
+
 const alertBalance = async () => {
   const redis = new Redis(REDIS_URL)
 
@@ -61,12 +26,12 @@ const alertBalance = async () => {
 
     for (const tracking of trackingContent) {
       const {text, chain, destination, type, min} = tracking
-      console.log(`${text} in ${chain}`)
+      console.log(`${env} ${text} in ${chain}`)
       if (type == TrackingType.NATIVE) {
         const signerAddress = await getLotterySignerAddress(chain, destination)
         const nativeBalance = await getNativeBalance(chain, signerAddress)
-        console.log(`signer address = ${signerAddress}`)
-        console.log(`native balance = ${nativeBalance}`)
+        // console.log(`signer address = ${signerAddress}`)
+        // console.log(`native balance = ${nativeBalance}`)
         const link = getExploreLink(chain)
         if (nativeBalance <= min) {
           const message = `${text} in ${chain} running out. Check <a href="${link}/address/${signerAddress}">here</a>`
@@ -83,6 +48,7 @@ const alertBalance = async () => {
         }
       }
     }
+    console.log(`${env}: ${JSON.stringify(batchAlerts)}`)
     redis.publish(REDIS_PUBSUB_CHANNEL_NAME, JSON.stringify({
       env,
       batch: batchAlerts
