@@ -2,6 +2,8 @@ import TelegramSession from "./telegram-session";
 import {NewMessage} from "telegram/events";
 import {FUND_NOTIFICATION, REDIS_PUBSUB_CHANNEL_NAME} from "../utils/constants";
 import Redis from 'ioredis'
+import {Api} from "telegram";
+import {wait} from "../utils/util";
 
 /*
 Telegram bot alive to listen command from user
@@ -15,22 +17,31 @@ export const telegramGoLive = async () => {
   const redis = new Redis(REDIS_URL)
   const normalRedis = new Redis(REDIS_URL)
 
+  const me = await client.getMe()
+  let meID
+  if (!(me instanceof Api.InputPeerUser)) {
+    meID = me.id
+  }
   client.addEventHandler(async (event) => {
     // Use the args from event.message.patternMatch.
     const message = event?.message?.message
-    if (message) {
+    const chatId = event!.message!.chatId
+    console.log(`chatId: ${chatId} meId: ${meID}`)
+    if (message && chatId != meID) {
       if (message.includes("/subscribe")) {
         const splits = message.split("subscribe")
         const content = splits[1].trimStart().trimEnd()
-        await handleSubscribe(event!.message!.chatId, content)
+        await handleSubscribe(chatId, content)
       } else if (message.includes("/unsubscribe")) {
         const splits = message.split("unsubscribe")
         const content = splits[1].trimStart().trimEnd()
-        await handleUnsubscribe(event!.message!.chatId, content)
+        await handleUnsubscribe(chatId, content)
       } else if (message.includes("/info")) {
-        await getYourWatchlist(event!.message!.chatId)
+        await getYourWatchlist(chatId)
       } else {
-        await client.sendMessage(event?.message.chatId, {message: "Wrong command, please check"})
+        await wait(1000)
+        console.log('loop')
+        // await client.sendMessage(chatId, {message: "Wrong command, please check"})
       }
     }
   }, new NewMessage({}));
