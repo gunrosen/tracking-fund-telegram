@@ -42,9 +42,9 @@ const VRF_COORDINATOR: ChainlinkVrf[] = [
 
   },
   {
-    network: Web3SupportNetwork.ARBITRUM_GOERLI,
-    subscriptionLink: 'https://vrf.chain.link/arbitrum-goerli',
-    vrfCoordinatorAddress: '0x6D80646bEAdd07cE68cab36c27c626790bBcf17f'
+    network: Web3SupportNetwork.ARBITRUM_SEPOLIA,
+    subscriptionLink: 'https://vrf.chain.link/arbitrum-sepolia',
+    vrfCoordinatorAddress: '0x50d47e4142598E3411aA864e08a44284e471AC6f'
   }
 ]
 

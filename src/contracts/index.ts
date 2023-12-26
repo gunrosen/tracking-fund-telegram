@@ -32,6 +32,18 @@ export const getRPC = (chain: Web3SupportNetwork): string => {
       return 'https://bsc-testnet.publicnode.com'
     case Web3SupportNetwork.BSC_MAINNET:
       return 'https://bsc-dataseed.bnbchain.org'
+    case Web3SupportNetwork.AVALANCHE_FUJI:
+      return 'https://rpc.ankr.com/avalanche_fuji'
+    case Web3SupportNetwork.AVALANCHE_MAINNET:
+      return 'https://avalanche-c-chain.publicnode.com'
+    case Web3SupportNetwork.POLYGON_MUMBAI:
+      return 'https://rpc-mumbai.maticvigil.com'
+    case Web3SupportNetwork.POLYGON_MATIC:
+      return 'https://rpc-mainnet.maticvigil.com'
+    case Web3SupportNetwork.ARBITRUM_SEPOLIA:
+      return 'https://sepolia-rollup.arbitrum.io/rpc'
+    case Web3SupportNetwork.ARBITRUM_MAINNET:
+      return 'https://arb1.arbitrum.io/rpc'
     default:
       return ''
   }

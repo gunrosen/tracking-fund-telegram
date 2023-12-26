@@ -6,7 +6,7 @@ export enum Web3SupportNetwork {
   AVALANCHE_MAINNET = 'avalanche_mainnet',
   AVALANCHE_FUJI = 'avalanche_fuji',
   ARBITRUM_MAINNET = 'arbitrum_mainnet',
-  ARBITRUM_GOERLI = 'arbitrum_goerli',
+  ARBITRUM_SEPOLIA = 'arbitrum_sepolia',
 }
 
 export interface Web3Network<Web3SupportNetwork> {

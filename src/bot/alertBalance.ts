@@ -28,13 +28,17 @@ const alertBalance = async () => {
       const {text, chain, destination, type, min} = tracking
       console.log(`${env} ${text} in ${chain}`)
       if (type == TrackingType.NATIVE) {
-        const signerAddress = await getLotterySignerAddress(chain, destination)
-        const nativeBalance = await getNativeBalance(chain, signerAddress)
-        // console.log(`signer address = ${signerAddress}`)
-        // console.log(`native balance = ${nativeBalance}`)
+        let nativeBalance = 0
+        let checkAddress = destination
+        if (env.includes("fxb")) {
+          checkAddress = await getLotterySignerAddress(chain, destination)
+          nativeBalance = await getNativeBalance(chain, checkAddress)
+        } else {
+          nativeBalance = await getNativeBalance(chain, destination)
+        }
         const link = getExploreLink(chain)
         if (nativeBalance <= min) {
-          const message = `${text} in ${chain} running out. Check <a href="${link}/address/${signerAddress}">here</a>`
+          const message = `${text} in ${chain} running out. Check <a href="${link}/address/${checkAddress}">here</a>`
           batchAlerts.push(message)
         }
       } else if (type == TrackingType.LINK) {
@@ -48,11 +52,13 @@ const alertBalance = async () => {
         }
       }
     }
-    console.log(`${env}: ${JSON.stringify(batchAlerts)}`)
-    redis.publish(REDIS_PUBSUB_CHANNEL_NAME, JSON.stringify({
-      env,
-      batch: batchAlerts
-    }))
+
+    if (batchAlerts.length > 0) {
+      redis.publish(REDIS_PUBSUB_CHANNEL_NAME, JSON.stringify({
+        env,
+        batch: batchAlerts
+      }))
+    }
   }
   process.exit()
 }
