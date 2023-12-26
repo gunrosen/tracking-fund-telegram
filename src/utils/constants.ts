@@ -4,6 +4,7 @@ const FUND_NOTIFICATION = {
   FXB_PROD: 'fxb_prod',
   DEX_STAG: 'dex_stag',
   DEX_PROD: 'dex_prod',
+  ALL: 'all',
 }
 export {
   LIMIT_REQUEST_PER_SESSION,
