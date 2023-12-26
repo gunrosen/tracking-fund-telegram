@@ -9,7 +9,7 @@ Telegram bot alive to listen command from user
 
 const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379'
 
-const telegramGoLive = async () => {
+export const telegramGoLive = async () => {
   const telegramSession = new TelegramSession(true)
   const client = await telegramSession.getTelegramClient()
   const redis = new Redis(REDIS_URL)
@@ -159,4 +159,4 @@ const telegramGoLive = async () => {
 }
 
 
-telegramGoLive()
+// telegramGoLive()

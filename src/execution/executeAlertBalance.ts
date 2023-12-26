@@ -2,7 +2,7 @@ import {alertBalance} from "../bot/alertBalance"
 const cron = require('node-cron');
 
 (() => {
-  cron.schedule('*/25 * * * *', async () => {
+  cron.schedule('*,30 * * * *', async () => {
     await alertBalance()
   });
 })()

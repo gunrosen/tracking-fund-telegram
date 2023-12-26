@@ -15,6 +15,8 @@
     "typescript": "^4.9.3"
   },
   "scripts": {
+    "execute-telegram-live": "nodemon src/execution/executeTelegramLive.ts",
+    "execute-alert-balance": "nodemon src/execution/executeAlertBalance.ts",
     "setup-telegram-bot": "nodemon src/bot/setupTelegramBot.ts",
     "telegram-live": "nodemon src/telegram/telegram-live.ts",
     "alert-balance": "nodemon src/bot/alertBalance.ts",

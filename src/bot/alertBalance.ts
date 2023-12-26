@@ -60,7 +60,7 @@ export const alertBalance = async () => {
       }))
     }
   }
-  process.exit()
+  // process.exit()
 }
 
 
