@@ -42,7 +42,11 @@ export const telegramGoLive = async () => {
                 const content = splits[1].trimStart().trimEnd()
                 await handleUnsubscribe(chatId, content)
             } else if (message.includes("/info")) {
-                await getYourWatchlist(chatId)
+                await getYourStatus(chatId)
+            } else if (message.includes("/mute")) {
+                await handleMuteAlert(chatId,true)
+            } else if (message.includes("/unmute")) {
+                await handleMuteAlert(chatId,false)
             } else {
                 await wait(1000)
                 await client.sendMessage(chatId, {message: "Wrong command, please check"})
@@ -66,7 +70,10 @@ export const telegramGoLive = async () => {
         const chatIds = await normalRedis.smembers(`subscribe:${env}`)
         client.setParseMode("html");
         for (const chatId of chatIds) {
-            await client.sendMessage(chatId, {message: content, parseMode: 'html'})
+            const muted = await normalRedis.get(`mute:${chatId.toString()}`)
+            if (!muted) {
+                await client.sendMessage(chatId, {message: content, parseMode: 'html'})
+            }
         }
     });
 
@@ -142,10 +149,21 @@ export const telegramGoLive = async () => {
         }
     }
 
-    const getYourWatchlist = async (chatId: bigInt.BigInteger) => {
+    const handleMuteAlert = async (chatId: bigInt.BigInteger, muted: boolean) => {
+        if (muted){
+            await normalRedis.set(`mute:${chatId.toString()}`, 1)
+        } else {
+            await normalRedis.del(`mute:${chatId.toString()}`)
+        }
+        await client.sendMessage(chatId, {message: `${muted ? "Muted" : "Un-muted"}`})
+    }
+
+    const getYourStatus = async (chatId: bigInt.BigInteger) => {
         const watchList = await normalRedis.smembers(`user:${chatId.toString()}`)
+        const muted = await normalRedis.get(`mute:${chatId.toString()}`)
+        const muteStatus = muted ? `<b>Muted</b>` : `<b>OK</b>`
         if (watchList.length > 0) {
-            await client.sendMessage(chatId, {message: `You registered ${watchList.join(",")}`})
+            await client.sendMessage(chatId, {message: `You registered ${watchList.join(",")} - ${muteStatus}`, parseMode: 'html'})
         } else {
             await client.sendMessage(chatId, {message: `You are not registered`})
         }

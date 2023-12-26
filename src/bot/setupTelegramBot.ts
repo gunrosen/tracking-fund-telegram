@@ -21,12 +21,21 @@ const setupTelegramBot = async () => {
           description: `env: ${supportedEnv.join(" ")}`,
         }),
         new Api.BotCommand({
+          command: "mute",
+          description: `mute alert from bot`,
+        }),
+        new Api.BotCommand({
+          command: "unmute",
+          description: `unmute alert`,
+        }),
+        new Api.BotCommand({
           command: "info",
           description: `your information`,
         }),
       ],
     })
-  );
+  )
+  process.exit()
 }
 
 setupTelegramBot()
