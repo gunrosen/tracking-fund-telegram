@@ -20,6 +20,10 @@ const setupTelegramBot = async () => {
           command: "unsubscribe",
           description: `env: ${supportedEnv.join(" ")}`,
         }),
+        new Api.BotCommand({
+          command: "info",
+          description: `your information`,
+        }),
       ],
     })
   );
