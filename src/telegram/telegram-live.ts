@@ -26,10 +26,14 @@ export const telegramGoLive = async () => {
         // Use the args from event.message.patternMatch.
         const message = event?.message?.message
         const chatId = event!.message!.chatId
-        const fromId = (event!.message!.fromId as Api.PeerUser)?.userId
+        const fromId = (event!.message!.sender as Api.User)?.id
         // console.log(`chatId: ${chatId} meId: ${meID}`)
         if (message && fromId && fromId.toString() !== meID.toString()) {
-            if (message.includes("/subscribe")) {
+            if (message.includes("/start")) {
+                const sender = event!.message!.sender as Api.User
+                let content = buildHelloMessage(sender)
+                await client.sendMessage(chatId, {message: content})
+            } else if (message.includes("/subscribe")) {
                 const splits = message.split("subscribe")
                 const content = splits[1].trimStart().trimEnd()
                 await handleSubscribe(chatId, content)
@@ -166,6 +170,12 @@ export const telegramGoLive = async () => {
                 content: ''
             }
         }
+    }
+
+    const buildHelloMessage = (sender: Api.User) => {
+        let content = `Hello ${sender.firstName} ${sender.lastName}!`
+        content += "\nPlease check bot commands to subscribe/unsubscribe content"
+        return content
     }
 }
 
