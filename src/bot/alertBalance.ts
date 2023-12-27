@@ -38,6 +38,7 @@ export const alertBalance = async () => {
         }
         const link = getExploreLink(chain)
         if (nativeBalance <= min) {
+          console.log(`${text} in ${chain}. Balance is ${nativeBalance} less then ${min}`)
           const message = `${text} in ${chain} running out. Check <a href="${link}/address/${checkAddress}">here</a>`
           batchAlerts.push(message)
         }
@@ -46,6 +47,7 @@ export const alertBalance = async () => {
         const subscription = await getVrfSubscriptionInfo(chain, subscriptionId)
         const {balance} = subscription
         if (balance <= min) {
+          console.log(`${text} in ${chain}. Balance is ${balance} less then ${min}`)
           const vrf = getVrf(chain)
           const message = `${text} in ${chain} running out. Please <a href="${vrf.subscriptionLink}/${subscriptionId}">add funds</a>`
           batchAlerts.push(message)

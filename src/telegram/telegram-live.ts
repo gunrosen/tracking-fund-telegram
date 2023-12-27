@@ -73,7 +73,7 @@ export const telegramGoLive = async () => {
   })
 
   redis.on("message", async (channel, message) => {
-    console.log(`Received ${message} from ${channel}`);
+    //console.log(`Received ${message} from ${channel}`);
     const {content, env} = buildMessageContent(message)
     const chatIds = await normalRedis.smembers(`subscribe:${env}`)
     client.setParseMode("html");
