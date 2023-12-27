@@ -86,6 +86,7 @@ export const telegramGoLive = async () => {
           if (e instanceof RPCError){
             console.error(`error when sending message to ${chatId} ${e.message}`)
           } else {
+            console.log(`The hell`)
             console.error(e)
           }
         }
