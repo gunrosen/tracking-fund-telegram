@@ -20,6 +20,7 @@
     "setup-telegram-bot": "nodemon src/bot/setupTelegramBot.ts",
     "telegram-live": "nodemon src/telegram/telegram-live.ts",
     "alert-balance": "nodemon src/bot/alertBalance.ts",
+    "faucet-token": "nodemon src/bot/faucetToken.ts",
     "test-vrf": "nodemon src/contracts/chainlink/vrf.ts",
     "test": "jest",
     "build": "rm -rf dist && tsc"
@@ -35,6 +36,7 @@
   },
   "homepage": "https://github.com/gunrosen/tracking-fund-telegram#readme",
   "dependencies": {
+    "axios": "^1.6.3",
     "dotenv": "^16.3.1",
     "ethers": "^6.9.0",
     "input": "^1.0.1",
