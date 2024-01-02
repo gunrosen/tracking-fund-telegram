@@ -100,8 +100,9 @@ export const telegramGoLive = async () => {
       splits = [
         FUND_NOTIFICATION.FXB_STAG,
         FUND_NOTIFICATION.FXB_PROD,
+        FUND_NOTIFICATION.DEX_TEST,
         FUND_NOTIFICATION.DEX_STAG,
-        FUND_NOTIFICATION.DEX_PROD
+        FUND_NOTIFICATION.DEX_PROD,
       ]
     }
     let successList: string[] = []
@@ -109,6 +110,7 @@ export const telegramGoLive = async () => {
       switch (subscribeContent) {
         case FUND_NOTIFICATION.FXB_STAG:
         case FUND_NOTIFICATION.FXB_PROD:
+        case FUND_NOTIFICATION.DEX_TEST:
         case FUND_NOTIFICATION.DEX_STAG:
         case FUND_NOTIFICATION.DEX_PROD: {
           console.log(`${chatId.toString()}-:-${subscribeContent}`)
@@ -136,6 +138,7 @@ export const telegramGoLive = async () => {
       splits = [
         FUND_NOTIFICATION.FXB_STAG,
         FUND_NOTIFICATION.FXB_PROD,
+        FUND_NOTIFICATION.DEX_TEST,
         FUND_NOTIFICATION.DEX_STAG,
         FUND_NOTIFICATION.DEX_PROD
       ]
@@ -145,6 +148,7 @@ export const telegramGoLive = async () => {
       switch (subscribeContent) {
         case FUND_NOTIFICATION.FXB_STAG:
         case FUND_NOTIFICATION.FXB_PROD:
+        case FUND_NOTIFICATION.DEX_TEST:
         case FUND_NOTIFICATION.DEX_STAG:
         case FUND_NOTIFICATION.DEX_PROD: {
           console.log(`${chatId.toString()}-:-${subscribeContent}`)

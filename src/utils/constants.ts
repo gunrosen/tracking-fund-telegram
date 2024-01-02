@@ -10,8 +10,8 @@ const FUND_NOTIFICATION = {
   ALL: 'all',
 }
 const REDIS_PUBSUB_CHANNEL_NAME = 'alert-balance'
-const DEFAULT_MIN_NATIVE_MAINNET= 0.5
-const DEFAULT_MIN_NATIVE_TESTNET= 0.3
+const DEFAULT_MIN_NATIVE_MAINNET= 0.8
+const DEFAULT_MIN_NATIVE_TESTNET= 0.5
 const DEFAULT_MIN_LINK = 5
 
 const ENVIRONMENT = {
@@ -175,6 +175,20 @@ const ENVIRONMENT = {
       chain: Web3SupportNetwork.ARBITRUM_SEPOLIA,
       type: TrackingType.LINK,
       destination: '42',
+      min: DEFAULT_MIN_LINK
+    },
+    {
+      text: "Relayer",
+      chain: Web3SupportNetwork.FANTOM_TESTNET,
+      type: TrackingType.NATIVE,
+      destination: '0xBD17E05cE4ACbb4f91e675161DB3E8e357D8e9b1',
+      min: DEFAULT_MIN_NATIVE_TESTNET
+    },
+    {
+      text: "LINK fund",
+      chain: Web3SupportNetwork.FANTOM_TESTNET,
+      type: TrackingType.LINK,
+      destination: '422',
       min: DEFAULT_MIN_LINK
     }
   ]
