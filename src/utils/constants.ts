@@ -109,7 +109,7 @@ const ENVIRONMENT = {
       text: "Relayer",
       chain: Web3SupportNetwork.FANTOM_TESTNET,
       type: TrackingType.NATIVE,
-      destination: '0xe002562f861C22ccCa11Dcaa37418639B1cFa689',
+      destination: '0x798219668EE38DeFc9F28F508aA68EF68811bD8c',
       min: DEFAULT_MIN_NATIVE_TESTNET
     },
     {
