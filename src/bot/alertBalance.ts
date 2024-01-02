@@ -3,7 +3,7 @@ import {getLotterySignerAddress, getNativeBalance} from "../contracts";
 import {getVrf, getVrfSubscriptionInfo} from "../contracts/chainlink/vrf";
 import Redis from 'ioredis'
 import {ENVIRONMENT, REDIS_PUBSUB_CHANNEL_NAME} from "../utils/constants";
-import {getExploreLink} from "../utils/util";
+import {getExploreScanLink} from "../utils/util";
 
 // env, chain, text, balance, limit
 interface TrackingJob {
@@ -36,7 +36,7 @@ export const alertBalance = async () => {
         } else {
           nativeBalance = await getNativeBalance(chain, destination)
         }
-        const link = getExploreLink(chain)
+        const link = getExploreScanLink(chain)
         if (nativeBalance <= min) {
           console.log(`${text} in ${chain}. Balance is ${nativeBalance} less then ${min}`)
           const message = `${text} in ${chain} running out. Check <a href="${link}/address/${checkAddress}">here</a>`

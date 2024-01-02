@@ -44,6 +44,10 @@ export const getRPC = (chain: Web3SupportNetwork): string => {
       return 'https://sepolia-rollup.arbitrum.io/rpc'
     case Web3SupportNetwork.ARBITRUM_MAINNET:
       return 'https://arb1.arbitrum.io/rpc'
+    case Web3SupportNetwork.FANTOM_TESTNET:
+      return 'https://rpc.testnet.fantom.network'
+    case Web3SupportNetwork.FANTOM_MAINNET:
+      return 'https://rpcapi.fantom.network'
     default:
       return ''
   }

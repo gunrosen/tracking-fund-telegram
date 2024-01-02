@@ -8,7 +8,7 @@ const wait = (ms): Promise<any> => {
   })
 }
 
-const getExploreLink = (chain: string): string =>{
+const getExploreScanLink = (chain: string): string =>{
   switch (chain) {
     case Web3SupportNetwork.BSC_TESTNET:
       return 'https://testnet.bscscan.com'
@@ -26,9 +26,13 @@ const getExploreLink = (chain: string): string =>{
       return 'https://sepolia.arbiscan.io'
     case Web3SupportNetwork.ARBITRUM_MAINNET:
       return 'https://arbiscan.io'
+    case Web3SupportNetwork.FANTOM_TESTNET:
+      return 'https://testnet.ftmscan.com'
+    case Web3SupportNetwork.FANTOM_MAINNET:
+      return 'https://ftmscan.com'
   }
 }
 export {
   wait,
-  getExploreLink
+  getExploreScanLink
 }

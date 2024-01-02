@@ -45,6 +45,16 @@ const VRF_COORDINATOR: ChainlinkVrf[] = [
     network: Web3SupportNetwork.ARBITRUM_SEPOLIA,
     subscriptionLink: 'https://vrf.chain.link/arbitrum-sepolia',
     vrfCoordinatorAddress: '0x50d47e4142598E3411aA864e08a44284e471AC6f'
+  },
+  {
+    network: Web3SupportNetwork.FANTOM_TESTNET,
+    subscriptionLink: 'https://vrf.chain.link/fantom-testnet',
+    vrfCoordinatorAddress: '0xbd13f08b8352A3635218ab9418E340c60d6Eb418'
+  },
+  {
+    network: Web3SupportNetwork.FANTOM_MAINNET,
+    subscriptionLink: 'https://vrf.chain.link/fantom',
+    vrfCoordinatorAddress: '0xd5D517aBE5cF79B7e95eC98dB0f0277788aFF634'
   }
 ]
 

@@ -4,6 +4,7 @@ const LIMIT_REQUEST_PER_SESSION = 10
 const FUND_NOTIFICATION = {
   FXB_STAG: 'fxb_stag',
   FXB_PROD: 'fxb_prod',
+  DEX_TEST: 'dex_test',
   DEX_STAG: 'dex_stag',
   DEX_PROD: 'dex_prod',
   ALL: 'all',
@@ -44,6 +45,78 @@ const ENVIRONMENT = {
       chain: Web3SupportNetwork.BSC_MAINNET,
       type: TrackingType.LINK,
       destination: '962',
+      min: DEFAULT_MIN_LINK
+    }
+  ],
+  "dex_test":[
+    {
+      text: "Relayer",
+      chain: Web3SupportNetwork.BSC_TESTNET,
+      type: TrackingType.NATIVE,
+      destination: '0xaca614a806Cc874505210303Cd3cA957fD6EA3aA',
+      min: DEFAULT_MIN_NATIVE_TESTNET
+    },
+    {
+      text: "LINK fund",
+      chain: Web3SupportNetwork.BSC_TESTNET,
+      type: TrackingType.LINK,
+      destination: '3238',
+      min: DEFAULT_MIN_LINK
+    },
+    {
+      text: "Relayer",
+      chain: Web3SupportNetwork.AVALANCHE_FUJI,
+      type: TrackingType.NATIVE,
+      destination: '0xB28bC1FC3a040a78619cb0fE1b9b0B61F147a733',
+      min: DEFAULT_MIN_NATIVE_TESTNET
+    },
+    {
+      text: "LINK fund",
+      chain: Web3SupportNetwork.AVALANCHE_FUJI,
+      type: TrackingType.LINK,
+      destination: '798',
+      min: DEFAULT_MIN_LINK
+    },
+    {
+      text: "Relayer",
+      chain: Web3SupportNetwork.POLYGON_MUMBAI,
+      type: TrackingType.NATIVE,
+      destination: '0x0F197254dC05b074eC8Ed8D56a16f1318b451adD',
+      min: DEFAULT_MIN_NATIVE_TESTNET
+    },
+    {
+      text: "LINK fund",
+      chain: Web3SupportNetwork.POLYGON_MUMBAI,
+      type: TrackingType.LINK,
+      destination: '6588',
+      min: DEFAULT_MIN_LINK
+    },
+    {
+      text: "Relayer",
+      chain: Web3SupportNetwork.ARBITRUM_SEPOLIA,
+      type: TrackingType.NATIVE,
+      destination: '0xe002562f861C22ccCa11Dcaa37418639B1cFa689',
+      min: DEFAULT_MIN_NATIVE_TESTNET
+    },
+    {
+      text: "LINK fund",
+      chain: Web3SupportNetwork.ARBITRUM_SEPOLIA,
+      type: TrackingType.LINK,
+      destination: '42',
+      min: DEFAULT_MIN_LINK
+    },
+    {
+      text: "Relayer",
+      chain: Web3SupportNetwork.FANTOM_TESTNET,
+      type: TrackingType.NATIVE,
+      destination: '0xe002562f861C22ccCa11Dcaa37418639B1cFa689',
+      min: DEFAULT_MIN_NATIVE_TESTNET
+    },
+    {
+      text: "LINK fund",
+      chain: Web3SupportNetwork.FANTOM_TESTNET,
+      type: TrackingType.LINK,
+      destination: '422',
       min: DEFAULT_MIN_LINK
     }
   ],
