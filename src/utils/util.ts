@@ -15,7 +15,7 @@ const getExploreScanLink = (chain: string): string =>{
     case Web3SupportNetwork.BSC_MAINNET:
       return 'https://bscscan.com'
     case Web3SupportNetwork.AVALANCHE_FUJI:
-      return 'https://snowtrace.io'
+      return 'https://testnet.avascan.info/blockchain/all'
     case Web3SupportNetwork.AVALANCHE_MAINNET:
       return 'https://avascan.info/blockchain/all'
     case Web3SupportNetwork.POLYGON_MUMBAI:
