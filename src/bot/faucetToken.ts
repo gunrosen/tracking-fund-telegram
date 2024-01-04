@@ -7,7 +7,7 @@ import {wait} from "../utils/util";
 
 require('dotenv').config()
 import axios from "axios";
-import {ethers, parseEther} from "ethers";
+import {ethers, formatEther, parseEther} from "ethers";
 import {getRPC} from "../contracts";
 import {Web3SupportNetwork} from "../types";
 
@@ -19,34 +19,51 @@ const FAUCET_CHAINSTACK_API = process.env.FAUCET_CHAINSTACK_API || ''
 const apiUrl = `https://api.chainstack.com/v1/faucet/${chain}`
 
 const faucetToken = async () => {
+  const rpc = getRPC(Web3SupportNetwork.BSC_TESTNET)
+  const provider = new ethers.JsonRpcProvider(rpc)
+  let myWallet = new ethers.Wallet(RECIPIENT_PRIVATE_KEY)
+  myWallet = myWallet.connect(provider)
+  const walletAddress = await myWallet.getAddress()
+  console.log(`Request faucet to ${walletAddress}`)
 
   try {
-    const rpc = getRPC(Web3SupportNetwork.BSC_TESTNET)
-    const provider = new ethers.JsonRpcProvider(rpc)
-    let myWallet = new ethers.Wallet( RECIPIENT_PRIVATE_KEY)
-    myWallet = myWallet.connect(provider)
-    const walletAddress = await myWallet.getAddress()
-    console.log(`Sending faucet request for address ${walletAddress}`)
-
-    const response = await axios.post(apiUrl, { address:walletAddress }, {
+    const response = await axios.post(apiUrl, {address: walletAddress}, {
       headers: {
         'Authorization': `Bearer ${FAUCET_CHAINSTACK_API}`,
         'Content-Type': 'application/json',
       },
     });
-
     console.log('API call successful:', response.data);
+  } catch (error) {
+    console.error(error.response?.data ? error.response.data : error);
+  }
+
+  try {
     await wait(5000)
-    const tx = {
+    const balance = await provider.getBalance(walletAddress)
+    console.log(`Balance: ${formatEther(balance)}`)
+    // Estimate the gas amount for a transaction by passing the transaction parameters
+    const gasAmount = await provider.estimateGas({
       to: FAUCET_VAULT_ADDRESS,
-      value: parseEther('0.45')
+      value: parseEther("0.5")
+    });
+    const amountCanSend = balance - parseEther("0.002")
+    if (amountCanSend > 0) {
+      console.log(`Can be sent: ${formatEther(amountCanSend)}`)
+      const tx = {
+        to: FAUCET_VAULT_ADDRESS,
+        value: amountCanSend,
+        gasLimit: gasAmount
+      }
+
+      const receipt = await myWallet.sendTransaction(tx)
+      console.log(`receipt: ${receipt?.hash}`)
     }
-    const receipt = await myWallet.sendTransaction(tx)
-    console.log(`receipt: ${receipt?.hash}}`)
 
   } catch (error) {
-    console.error(error.response?.data ?  error.response.data : error);
+    console.error(error);
   }
+
 }
 
 faucetToken()
