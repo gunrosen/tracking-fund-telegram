@@ -18,7 +18,7 @@ const FAUCET_CHAINSTACK_API = process.env.FAUCET_CHAINSTACK_API || ''
 
 const apiUrl = `https://api.chainstack.com/v1/faucet/${chain}`
 
-const faucetToken = async () => {
+export const faucetToken = async () => {
   const rpc = getRPC(Web3SupportNetwork.BSC_TESTNET)
   const provider = new ethers.JsonRpcProvider(rpc)
   let myWallet = new ethers.Wallet(RECIPIENT_PRIVATE_KEY)
@@ -87,4 +87,4 @@ const faucetToken = async () => {
 
 }
 
-faucetToken()
+// faucetToken()
