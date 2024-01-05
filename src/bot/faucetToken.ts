@@ -25,7 +25,7 @@ const faucetToken = async () => {
   myWallet = myWallet.connect(provider)
   const walletAddress = await myWallet.getAddress()
   console.log(`Request faucet to ${walletAddress}`)
-
+  let transactionTx: string = ''
   try {
     const response = await axios.post(apiUrl, {address: walletAddress}, {
       headers: {
@@ -34,12 +34,31 @@ const faucetToken = async () => {
       },
     });
     console.log('API call successful:', response.data);
+    const splits = response?.data?.transaction.split('/')
+    transactionTx = splits[splits.length - 1]
+    while (1) {
+      if (transactionTx == '') {
+        console.error(`Can not parse transactionHash`)
+        break
+      }
+      await wait(5000)
+      // check if transaction confirmed
+      try {
+        const tx = await provider.getTransaction(transactionTx)
+        if (tx && tx.blockNumber) {
+          console.log(`${transactionTx} confirmed`)
+          break
+        }
+      } catch (e) {
+        console.error(e)
+      }
+    }
+
   } catch (error) {
     console.error(error.response?.data ? error.response.data : error);
   }
 
   try {
-    await wait(5000)
     const balance = await provider.getBalance(walletAddress)
     console.log(`Balance: ${formatEther(balance)}`)
     // Estimate the gas amount for a transaction by passing the transaction parameters
@@ -58,6 +77,8 @@ const faucetToken = async () => {
 
       const receipt = await myWallet.sendTransaction(tx)
       console.log(`receipt: ${receipt?.hash}`)
+    } else {
+      console.log(`Not enough to send to vault`)
     }
 
   } catch (error) {
