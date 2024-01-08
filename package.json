@@ -17,6 +17,7 @@
   "scripts": {
     "execute-telegram-live": "nodemon src/execution/executeTelegramLive.ts",
     "execute-alert-balance": "nodemon src/execution/executeAlertBalance.ts",
+    "execute-faucet-token": "nodemon src/execution/executeTokenFaucet.ts",
     "setup-telegram-bot": "nodemon src/bot/setupTelegramBot.ts",
     "telegram-live": "nodemon src/telegram/telegram-live.ts",
     "alert-balance": "nodemon src/bot/alertBalance.ts",

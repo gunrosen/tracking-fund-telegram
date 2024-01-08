@@ -8,6 +8,16 @@ const wait = (ms): Promise<any> => {
   })
 }
 
+const getCurrentTimeStr = (): string => {
+  const currentTime = new Date();
+  return currentTime.getDate() + "/"
+    + (currentTime.getMonth()+1)  + "/"
+    + currentTime.getFullYear() + " @ "
+    + currentTime.getHours() + ":"
+    + currentTime.getMinutes() + ":"
+    + currentTime.getSeconds();
+}
+
 const getExploreScanLink = (chain: string): string =>{
   switch (chain) {
     case Web3SupportNetwork.BSC_TESTNET:
@@ -34,5 +44,6 @@ const getExploreScanLink = (chain: string): string =>{
 }
 export {
   wait,
+  getCurrentTimeStr,
   getExploreScanLink
 }
