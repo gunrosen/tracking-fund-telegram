@@ -11,6 +11,12 @@
       "script": "./dist/src/execution/executeAlertBalance.js",
       "autorestart": true,
       "log_date_format": "YYYY-MM-DD HH:mm:ss Z"
+    },
+    {
+      "name": "faucet-token",
+      "script": "./dist/src/execution/executeFaucetToken.js",
+      "autorestart": true,
+      "log_date_format": "YYYY-MM-DD HH:mm:ss Z"
     }
   ]
 }

@@ -31,7 +31,6 @@ class TelegramSession {
 
   constructor(useBot: boolean) {
     this.useBot = useBot
-    this.redis = new Redis(REDIS_URL)
     if (this.useBot && (!botList || botList.length === 0)) {
       console.error(`TelegramSession: useBot=${this.useBot} - botList is empty`)
       process.exit(1)
@@ -40,6 +39,7 @@ class TelegramSession {
       console.error(`TelegramSession: useBot=${this.useBot} - userTokenList is empty`)
       process.exit(1)
     }
+    this.redis = new Redis(REDIS_URL)
   }
 
   /**
