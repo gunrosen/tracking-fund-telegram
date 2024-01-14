@@ -123,4 +123,4 @@ const sendFundToVault = async (myWallet: Wallet, walletAddress: string, provider
     }
 }
 
-faucetToken()
+// faucetToken()
