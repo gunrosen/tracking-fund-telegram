@@ -4,87 +4,123 @@ https://docs.chainstack.com/reference/chainstack-faucet-get-tokens-rpc-method
  */
 
 import {wait} from "../utils/util";
-
-require('dotenv').config()
 import axios from "axios";
-import {ethers, formatEther, parseEther} from "ethers";
+import {ethers, formatEther, JsonRpcProvider, parseEther, Wallet} from "ethers";
 import {getRPC} from "../contracts";
 import {Web3SupportNetwork} from "../types";
+
+require('dotenv').config()
 
 const chain = 'bnb-testnet' // goerli
 const RECIPIENT_PRIVATE_KEY = process.env.FAUCET_RECIPIENT_PRIVATE_KEY || ''
 const FAUCET_VAULT_ADDRESS = process.env.FAUCET_VAULT_ADDRESS || ''
 const FAUCET_CHAINSTACK_API = process.env.FAUCET_CHAINSTACK_API || ''
-
+const HOUR_TO_SECONDS = 60 * 60
+const MINUTE_TO_SECONDS = 60
 const apiUrl = `https://api.chainstack.com/v1/faucet/${chain}`
 
 export const faucetToken = async () => {
-  const rpc = getRPC(Web3SupportNetwork.BSC_TESTNET)
-  const provider = new ethers.JsonRpcProvider(rpc)
-  let myWallet = new ethers.Wallet(RECIPIENT_PRIVATE_KEY)
-  myWallet = myWallet.connect(provider)
-  const walletAddress = await myWallet.getAddress()
-  console.log(`Request faucet to ${walletAddress}`)
-  let transactionTx: string = ''
-  try {
-    const response = await axios.post(apiUrl, {address: walletAddress}, {
-      headers: {
-        'Authorization': `Bearer ${FAUCET_CHAINSTACK_API}`,
-        'Content-Type': 'application/json',
-      },
-    });
-    console.log('API call successful:', response.data);
-    const splits = response?.data?.transaction.split('/')
-    transactionTx = splits[splits.length - 1]
+    const rpc = getRPC(Web3SupportNetwork.BSC_TESTNET)
+    const provider = new JsonRpcProvider(rpc)
+    let myWallet = new ethers.Wallet(RECIPIENT_PRIVATE_KEY)
+    myWallet = myWallet.connect(provider)
+    const walletAddress = await myWallet.getAddress()
+
+    // SendToVault If need
+    await sendFundToVault(myWallet, walletAddress, provider)
+
+    console.log(`Request faucet to ${walletAddress}`)
+    let transactionTx: string = await faucetChainStack(walletAddress)
+    if (transactionTx === '') return
+    // Make sure transaction confirmed
     while (1) {
-      if (transactionTx == '') {
-        console.error(`Can not parse transactionHash`)
-        break
-      }
-      await wait(5000)
-      // check if transaction confirmed
-      try {
-        const tx = await provider.getTransaction(transactionTx)
-        if (tx && tx.blockNumber) {
-          console.log(`${transactionTx} confirmed`)
-          break
+        if (transactionTx == '') {
+            console.error(`Can not parse transactionHash`)
+            break
         }
-      } catch (e) {
-        console.error(e)
-      }
+        await wait(5000)
+        // check if transaction confirmed
+        try {
+            const tx = await provider.getTransaction(transactionTx)
+            if (tx && tx.blockNumber) {
+                console.log(`${transactionTx} confirmed`)
+                break
+            }
+        } catch (e) {
+            console.error(e)
+        }
     }
 
-  } catch (error) {
-    console.error(error.response?.data ? error.response.data : error);
-  }
-
-  try {
-    const balance = await provider.getBalance(walletAddress)
-    console.log(`Balance: ${formatEther(balance)}`)
-    // Estimate the gas amount for a transaction by passing the transaction parameters
-    const gasAmount = await provider.estimateGas({
-      to: FAUCET_VAULT_ADDRESS,
-      value: parseEther("0.5")
-    });
-    const amountCanSend = balance - parseEther("0.002")
-    if (amountCanSend > 0) {
-      console.log(`Can be sent: ${formatEther(amountCanSend)}`)
-      const tx = {
-        to: FAUCET_VAULT_ADDRESS,
-        value: amountCanSend,
-        gasLimit: gasAmount
-      }
-
-      const receipt = await myWallet.sendTransaction(tx)
-      console.log(`receipt: ${receipt?.hash}`)
-    } else {
-      console.log(`Not enough to send to vault`)
-    }
-
-  } catch (error) {
-    console.error(error);
-  }
+    await sendFundToVault(myWallet, walletAddress, provider)
 
 }
 
-// faucetToken()
+const faucetChainStack = async (walletAddress: string): Promise<string> => {
+    try {
+        const response = await axios.post(apiUrl, {address: walletAddress}, {
+            headers: {
+                'Authorization': `Bearer ${FAUCET_CHAINSTACK_API}`,
+                'Content-Type': 'application/json',
+            },
+        });
+        console.log('API call successful:', response.data);
+        const splits = response?.data?.transaction.split('/')
+        return splits[splits.length - 1];
+    } catch (error) {
+        const errorData = error.response?.data
+        if (errorData) {
+            if ('TooManyRequests' === errorData?.error?.code) {
+                const nextFaucetAvailableInSecond = Math.floor(Date.parse(errorData?.nextFaucetAvailable) / 1000)
+                const waitTime = nextFaucetAvailableInSecond - Math.floor(Date.now() / 1000) + 3;
+                const hour = Math.floor(waitTime / HOUR_TO_SECONDS)
+                const minute = Math.floor((waitTime - hour * HOUR_TO_SECONDS) / MINUTE_TO_SECONDS)
+                const second = Math.floor(waitTime % MINUTE_TO_SECONDS)
+                console.log(`Waiting for next faucet ${errorData?.nextFaucetAvailable} in ${hour}h:${minute}m:${second}s`)
+                if (waitTime > 12 * HOUR_TO_SECONDS) {
+                    console.log('Wait too long... then stop')
+                    return ''
+                }
+                await wait(waitTime)
+                return await faucetChainStack(walletAddress)
+            } else {
+                console.error(errorData)
+                return ''
+            }
+        } else {
+            console.error(error)
+            return ''
+        }
+    }
+}
+/*
+Error: insufficient funds for intrinsic transaction cost (transaction="0x",
+info={ "error": { "code": -32000, "message": "insufficient funds for gas * price + value: balance 500000000000000000, tx cost 500100000000000000, overshot 100000000000000" } }, code=INSUFFICIENT_FUNDS, version=6.9.0)
+ */
+const sendFundToVault = async (myWallet: Wallet, walletAddress: string, provider: JsonRpcProvider) => {
+    try {
+        const balance = await provider.getBalance(walletAddress)
+        console.log(`Balance: ${formatEther(balance)}`)
+        const gasAmount = await provider.estimateGas({
+            to: FAUCET_VAULT_ADDRESS,
+            value: parseEther("0.5")
+        });
+        const gasPrice = (await provider.getFeeData()).gasPrice
+        const amountCanSend = balance - gasAmount * gasPrice - parseEther("0.0001")
+        if (amountCanSend > 0) {
+            console.log(`Can be sent: ${formatEther(amountCanSend)}`)
+            const tx = {
+                to: FAUCET_VAULT_ADDRESS,
+                value: amountCanSend,
+            }
+
+            const receipt = await myWallet.sendTransaction(tx)
+            console.log(`receipt: ${receipt?.hash}`)
+        } else {
+            console.log(`Not enough to send to vault`)
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+faucetToken()
