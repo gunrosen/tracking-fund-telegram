@@ -80,7 +80,8 @@ const faucetChainStack = async (walletAddress: string): Promise<string> => {
                     console.log('Wait too long... then stop')
                     return ''
                 }
-                await wait(waitTime)
+                await wait(waitTime * 1000)
+                console.log('Restarting faucet progress')
                 return await faucetChainStack(walletAddress)
             } else {
                 console.error(errorData)
