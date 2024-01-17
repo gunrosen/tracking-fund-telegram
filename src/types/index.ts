@@ -9,6 +9,8 @@ export enum Web3SupportNetwork {
   ARBITRUM_SEPOLIA = 'arbitrum_sepolia',
   FANTOM_MAINNET = 'fantom_mainnet',
   FANTOM_TESTNET = 'fantom_testnet',
+  ETHEREUM_GOERLI= 'eth_goerli',
+  ETHEREUM_SEPOLIA= 'eth_sepolia',
 }
 
 export interface Web3Network<Web3SupportNetwork> {

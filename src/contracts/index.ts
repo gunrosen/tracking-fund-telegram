@@ -48,6 +48,10 @@ export const getRPC = (chain: Web3SupportNetwork): string => {
       return 'https://rpc.testnet.fantom.network'
     case Web3SupportNetwork.FANTOM_MAINNET:
       return 'https://rpcapi.fantom.network'
+    case Web3SupportNetwork.ETHEREUM_GOERLI:
+      return 'https://ethereum-goerli.publicnode.com'
+    case Web3SupportNetwork.ETHEREUM_SEPOLIA:
+      return 'https://ethereum-sepolia.publicnode.com'
     default:
       return ''
   }
