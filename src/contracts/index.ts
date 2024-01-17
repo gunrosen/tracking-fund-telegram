@@ -45,9 +45,9 @@ export const getRPC = (chain: Web3SupportNetwork): string => {
     case Web3SupportNetwork.ARBITRUM_MAINNET:
       return 'https://arb1.arbitrum.io/rpc'
     case Web3SupportNetwork.FANTOM_TESTNET:
-      return 'https://rpc.testnet.fantom.network'
+      return 'https://fantom-testnet.publicnode.com'
     case Web3SupportNetwork.FANTOM_MAINNET:
-      return 'https://rpcapi.fantom.network'
+      return 'https://fantom.publicnode.com'
     case Web3SupportNetwork.ETHEREUM_GOERLI:
       return 'https://ethereum-goerli.publicnode.com'
     case Web3SupportNetwork.ETHEREUM_SEPOLIA:
