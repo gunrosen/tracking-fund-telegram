@@ -42,8 +42,34 @@ const getExploreScanLink = (chain: string): string =>{
       return 'https://ftmscan.com'
   }
 }
+
+const getNativeTokenText = (chain: string): string =>{
+  switch (chain) {
+    case Web3SupportNetwork.BSC_TESTNET:
+      return 'TBNB'
+    case Web3SupportNetwork.BSC_MAINNET:
+      return 'BNB'
+    case Web3SupportNetwork.AVALANCHE_FUJI:
+      return 'TAVAX'
+    case Web3SupportNetwork.AVALANCHE_MAINNET:
+      return 'AVAX'
+    case Web3SupportNetwork.POLYGON_MUMBAI:
+      return 'TMATIC'
+    case Web3SupportNetwork.POLYGON_MATIC:
+      return 'MATIC'
+    case Web3SupportNetwork.ARBITRUM_SEPOLIA:
+      return 'TETH'
+    case Web3SupportNetwork.ARBITRUM_MAINNET:
+      return 'ETH'
+    case Web3SupportNetwork.FANTOM_TESTNET:
+      return 'TFTM'
+    case Web3SupportNetwork.FANTOM_MAINNET:
+      return 'FTM'
+  }
+}
 export {
   wait,
   getCurrentTimeStr,
-  getExploreScanLink
+  getExploreScanLink,
+  getNativeTokenText
 }

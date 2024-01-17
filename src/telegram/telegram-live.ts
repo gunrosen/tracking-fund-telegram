@@ -5,6 +5,7 @@ import Redis from 'ioredis'
 import {Api} from "telegram";
 import {wait} from "../utils/util";
 import {RPCError} from "telegram/errors";
+import {getBalance} from "../bot/getBalance";
 
 /*
 Telegram bot alive to listen command from user
@@ -42,7 +43,11 @@ export const telegramGoLive = async () => {
         const splits = message.split("unsubscribe")
         const content = splits[1].trimStart().trimEnd()
         await handleUnsubscribe(chatId, content)
-      } else if (message.includes("/info")) {
+      } else if (message.includes("/balance")) {
+        const splits = message.split("balance")
+        const content = splits[1].trimStart().trimEnd()
+        await handleGetBalance(chatId, content)
+      }else if (message.includes("/info")) {
         await getYourStatus(chatId)
       } else if (message.includes("/mute")) {
         await handleMuteAlert(chatId, true)
@@ -193,6 +198,57 @@ export const telegramGoLive = async () => {
     }
   }
 
+  const handleGetBalance = async (chatId: bigInt.BigInteger, content: string) => {
+    let unsupportedEnv: string[] = []
+    let splits: string[] = content.split(',').map(item => item.trim().toLowerCase())
+    if (splits.includes(FUND_NOTIFICATION.ALL)) {
+      splits = [
+        FUND_NOTIFICATION.FXB_STAG,
+        FUND_NOTIFICATION.FXB_PROD,
+        FUND_NOTIFICATION.DEX_TEST,
+        FUND_NOTIFICATION.DEX_STAG,
+        FUND_NOTIFICATION.DEX_PROD,
+      ]
+    } else if ('' === content){
+      splits = await normalRedis.smembers(`user:${chatId.toString()}`)
+    }
+  if (splits.length === 0) {
+    await client.sendMessage(chatId, {message: `Please provide env or subscribe any env`})
+    return
+  }
+    for (const env of splits) {
+      switch (env) {
+        case FUND_NOTIFICATION.FXB_STAG:
+        case FUND_NOTIFICATION.FXB_PROD:
+        case FUND_NOTIFICATION.DEX_TEST:
+        case FUND_NOTIFICATION.DEX_STAG:
+        case FUND_NOTIFICATION.DEX_PROD: {
+          console.log(`${chatId.toString()}-:-${env}`)
+          const message = await getBalance(env)
+          const {content} = buildMessageContent(message)
+          try {
+            await client.sendMessage(chatId, {message: content, parseMode: 'html'})
+          } catch (e) {
+            if (e instanceof RPCError){
+              console.error(`error when sending message to ${chatId} ${e.message}`)
+            } else {
+              console.log(`The hell handleGetBalance`)
+              console.error(e)
+            }
+          }
+          break
+        }
+        default: {
+          console.log(`Unsupported: ${env}`)
+          unsupportedEnv.push(env)
+          break
+        }
+      }
+    }
+    if (unsupportedEnv.length >0){
+      await client.sendMessage(chatId, {message: `Unsupported: ${unsupportedEnv.join(',')}`, parseMode: 'html'})
+    }
+  }
   const buildMessageContent = (message: string): { env: string, content: string } => {
     try {
       const object = JSON.parse(message)

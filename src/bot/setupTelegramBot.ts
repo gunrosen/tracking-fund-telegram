@@ -32,9 +32,14 @@ const setupTelegramBot = async () => {
           command: "info",
           description: `your information`,
         }),
+        new Api.BotCommand({
+          command: "balance",
+          description: `inquire balance information`,
+        }),
       ],
     })
   )
+  console.log("Set up bot completed")
   process.exit()
 }
 
