@@ -199,7 +199,7 @@ const ENVIRONMENT = {
       chain: Web3SupportNetwork.BSC_MAINNET,
       type: TrackingType.NATIVE,
       destination: '0x840AAed113F39C8bfC2d0C0497bC12Ee0B5f28BF',
-      min: DEFAULT_MIN_NATIVE_MAINNET
+      min: 0.6
     },
     {
       text: "LINK fund",
@@ -213,7 +213,7 @@ const ENVIRONMENT = {
       chain: Web3SupportNetwork.AVALANCHE_MAINNET,
       type: TrackingType.NATIVE,
       destination: '0x7A93068E72b973f3637b2c7c9fE743dD02F853Be',
-      min: DEFAULT_MIN_NATIVE_MAINNET
+      min: 2
     },
     {
       text: "LINK fund",
@@ -227,7 +227,7 @@ const ENVIRONMENT = {
       chain: Web3SupportNetwork.POLYGON_MATIC,
       type: TrackingType.NATIVE,
       destination: '0x25D873F3501d88491EfC668A4bf8649B932eDeb6',
-      min: DEFAULT_MIN_NATIVE_MAINNET
+      min: 3
     },
     {
       text: "LINK fund",
@@ -241,7 +241,7 @@ const ENVIRONMENT = {
       chain: Web3SupportNetwork.ARBITRUM_MAINNET,
       type: TrackingType.NATIVE,
       destination: '0xeb0739D2Fc2c13C13f278b500fe340382caC06d5',
-      min: DEFAULT_MIN_NATIVE_MAINNET
+      min: 0.025
     },
     {
       text: "LINK fund",
@@ -255,7 +255,7 @@ const ENVIRONMENT = {
       chain: Web3SupportNetwork.FANTOM_MAINNET,
       type: TrackingType.NATIVE,
       destination: '0x67B3533162Eb56fd972ef630Ca64711732204FE8',
-      min: DEFAULT_MIN_NATIVE_MAINNET
+      min: 3.25
     },
     {
       text: "LINK fund",
