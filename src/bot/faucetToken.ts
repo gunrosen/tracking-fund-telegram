@@ -19,31 +19,31 @@ const HOUR_TO_SECONDS = 60 * 60
 const MINUTE_TO_SECONDS = 60
 
 
-export const faucetToken= async () => {
-  for (const chain of chains) {
-    faucetTokenByChain(chain)
-  }
+export const faucetToken = async () => {
+    for (const chain of chains) {
+        faucetTokenByChain(chain)
+    }
 }
 
 export const faucetTokenByChain = async (chain: string) => {
     let rpc = null
     switch (chain) {
-      case 'bnb-testnet':{
-        rpc = getRPC(Web3SupportNetwork.BSC_TESTNET)
-        break
-      }
-      case 'sepolia':{
-        rpc = getRPC(Web3SupportNetwork.ETHEREUM_SEPOLIA)
-        break
-      }
-      case 'goerli':{
-        rpc = getRPC(Web3SupportNetwork.ETHEREUM_GOERLI)
-        break
-      }
-      default: {
-        console.error(`Do not support ${chain}`)
-        return
-      }
+        case 'bnb-testnet': {
+            rpc = getRPC(Web3SupportNetwork.BSC_TESTNET)
+            break
+        }
+        case 'sepolia': {
+            rpc = getRPC(Web3SupportNetwork.ETHEREUM_SEPOLIA)
+            break
+        }
+        case 'goerli': {
+            rpc = getRPC(Web3SupportNetwork.ETHEREUM_GOERLI)
+            break
+        }
+        default: {
+            console.error(`Do not support ${chain}`)
+            return
+        }
     }
     const provider = new JsonRpcProvider(rpc)
     let myWallet = new ethers.Wallet(RECIPIENT_PRIVATE_KEY)
@@ -109,11 +109,11 @@ const faucetChainStack = async (walletAddress: string, chain: string): Promise<s
                 console.log(`${chain}: Restarting faucet progress`)
                 return await faucetChainStack(walletAddress, chain)
             } else {
-                console.error(`${chain}:${errorData}`)
+                console.error(`${chain}: `, errorData)
                 return ''
             }
         } else {
-            console.error(`${chain}:${error}`)
+            console.error(`${chain}:`, error)
             return ''
         }
     }
@@ -125,14 +125,13 @@ info={ "error": { "code": -32000, "message": "insufficient funds for gas * price
 const sendFundToVault = async (myWallet: Wallet, walletAddress: string, provider: JsonRpcProvider, chain: string) => {
     try {
         const balance = await provider.getBalance(walletAddress)
-        console.log(`${chain}:Balance: ${formatEther(balance)}`)
         const gasAmount = await provider.estimateGas({
             to: FAUCET_VAULT_ADDRESS,
             value: parseEther("0.5")
         });
-        console.log(`${chain}:gasAmount: ${gasAmount}`)
         const gasPrice = (await provider.getFeeData()).gasPrice
-        const amountCanSend = balance - gasAmount * gasPrice - parseEther("0.0001")
+        console.log(`${chain}:Balance: ${formatEther(balance)}, gasAmount: ${gasAmount}, gasPrice: ${gasPrice}`)
+        const amountCanSend = balance - gasAmount * gasPrice - parseEther("0.002")
         if (amountCanSend > 0) {
             console.log(`${chain}:Can be sent: ${formatEther(amountCanSend)}`)
             const tx = {
@@ -146,7 +145,7 @@ const sendFundToVault = async (myWallet: Wallet, walletAddress: string, provider
             console.log(`${chain}:Not enough to send to vault`)
         }
     } catch (error) {
-        console.error(`${chain}:`,error);
+        console.error(`${chain}:`, error);
     }
 }
 
