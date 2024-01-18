@@ -88,7 +88,7 @@ const faucetChainStack = async (walletAddress: string, chain: string): Promise<s
                 'Content-Type': 'application/json',
             },
         });
-        console.log('${chain}: API call successful:', response.data);
+        console.log(`${chain}: API call successful:`, response.data);
         const splits = response?.data?.transaction.split('/')
         return splits[splits.length - 1];
     } catch (error) {
@@ -109,11 +109,11 @@ const faucetChainStack = async (walletAddress: string, chain: string): Promise<s
                 console.log(`${chain}: Restarting faucet progress`)
                 return await faucetChainStack(walletAddress, chain)
             } else {
-                console.error(errorData)
+                console.error(`${chain}:${errorData}`)
                 return ''
             }
         } else {
-            console.error(error)
+            console.error(`${chain}:${error}`)
             return ''
         }
     }
@@ -130,6 +130,7 @@ const sendFundToVault = async (myWallet: Wallet, walletAddress: string, provider
             to: FAUCET_VAULT_ADDRESS,
             value: parseEther("0.5")
         });
+        console.log(`${chain}:gasAmount: ${gasAmount}`)
         const gasPrice = (await provider.getFeeData()).gasPrice
         const amountCanSend = balance - gasAmount * gasPrice - parseEther("0.0001")
         if (amountCanSend > 0) {
@@ -145,7 +146,7 @@ const sendFundToVault = async (myWallet: Wallet, walletAddress: string, provider
             console.log(`${chain}:Not enough to send to vault`)
         }
     } catch (error) {
-        console.error(error);
+        console.error(`${chain}:`,error);
     }
 }
 
