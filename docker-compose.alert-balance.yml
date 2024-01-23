@@ -9,7 +9,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        - pm2file=pm2.config.json
+        - pm2file=pm2.alert-balance.config.json
     env_file:
       - ./.env
     depends_on:

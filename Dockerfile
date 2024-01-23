@@ -9,4 +9,6 @@ RUN npm install
 COPY . ./
 RUN npm run build
 
-CMD [ "pm2-runtime", "start", "pm2.config.json" ]
+ARG pm2file
+ENV file=$pm2file
+CMD pm2-runtime start $file

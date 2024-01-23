@@ -1,0 +1,16 @@
+{
+  "apps": [
+    {
+      "name": "telegram-live",
+      "script": "./dist/src/execution/executeTelegramLive.js",
+      "autorestart": true,
+      "log_date_format": "YYYY-MM-DD HH:mm:ss Z"
+    },
+    {
+      "name": "alert-balance",
+      "script": "./dist/src/execution/executeAlertBalance.js",
+      "autorestart": true,
+      "log_date_format": "YYYY-MM-DD HH:mm:ss Z"
+    }
+  ]
+}
