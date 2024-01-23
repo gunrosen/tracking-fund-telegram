@@ -1,8 +1,8 @@
 version: '3.8'
 services:
-  alert-balance:
-    container_name: alert_balance
-    image: alert_balance:1.0
+  tools:
+    container_name: tools
+    image: tools:1.0
     networks:
       - social-network
     build:
@@ -22,7 +22,7 @@ services:
     restart: unless-stopped
 
   redis:
-    container_name: alert_balance_redis
+    container_name: tools_redis
     image: redis:latest
     networks:
       - social-network
