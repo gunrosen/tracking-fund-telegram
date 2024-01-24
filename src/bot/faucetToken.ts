@@ -109,7 +109,8 @@ const faucetChainStack = async (walletAddress: string, chain: string): Promise<s
                 console.log(`${chain}: Restarting faucet progress`)
                 return await faucetChainStack(walletAddress, chain)
             } else {
-                console.error(`${chain}: `, errorData)
+                // try to catch: goerli:  { error: "Cannot read properties of undefined (reading 'success')" }
+                console.error(`${chain}: `, error)
                 return ''
             }
         } else {
