@@ -67,6 +67,30 @@ const getNativeTokenText = (chain: string): string =>{
       return 'FTM'
   }
 }
+
+export async function retryable<T>(
+  fn: (retryCount: number) => Promise<T>,
+  onError: <TError extends Error>(err: TError, retryCount: number) => Promise<void> = () =>
+    Promise.resolve(),
+  maxRetries: number = 3
+) {
+  const doTask = async (attempts: number): Promise<T> => {
+    try {
+      await wait(Math.floor(Math.random() * 4) * 1000)
+      return await fn(attempts)
+    } catch (err: any) {
+      if (attempts >= maxRetries) {
+        await onError(err, attempts)
+        throw err
+      } else {
+        return await doTask(attempts + 1)
+      }
+    }
+  }
+
+  return doTask(0)
+}
+
 export {
   wait,
   getCurrentTimeStr,

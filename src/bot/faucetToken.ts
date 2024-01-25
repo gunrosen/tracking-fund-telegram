@@ -3,7 +3,7 @@ Faucet API using chainstack api
 https://docs.chainstack.com/reference/chainstack-faucet-get-tokens-rpc-method
  */
 
-import {wait} from "../utils/util";
+import {retryable, wait} from "../utils/util";
 import axios from "axios";
 import {ethers, formatEther, JsonRpcProvider, parseEther, Wallet} from "ethers";
 import {getRPC} from "../contracts";
@@ -54,7 +54,13 @@ export const faucetTokenByChain = async (chain: string) => {
     await sendFundToVault(myWallet, walletAddress, provider, chain)
 
     console.log(`${chain}: Request faucet to ${walletAddress}`)
-    let transactionTx: string = await faucetChainStack(walletAddress, chain)
+    let transactionTx: string = await retryable(
+      async () => { return faucetChainStack(walletAddress, chain)},
+      async (err) => {
+        console.log(`${chain}: faucet fail after retry`)
+      },
+      3
+    )
     if (transactionTx === '') return
     // Make sure transaction confirmed
     while (1) {
@@ -110,12 +116,13 @@ const faucetChainStack = async (walletAddress: string, chain: string): Promise<s
                 return await faucetChainStack(walletAddress, chain)
             } else {
                 // try to catch: goerli:  { error: "Cannot read properties of undefined (reading 'success')" }
+                // error from chainstacks
                 console.error(`${chain}: `, error)
-                return ''
+                throw error
             }
         } else {
             console.error(`${chain}:`, error)
-            return ''
+            throw error
         }
     }
 }
