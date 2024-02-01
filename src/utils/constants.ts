@@ -12,7 +12,7 @@ const FUND_NOTIFICATION = {
 const REDIS_PUBSUB_CHANNEL_NAME = 'alert-balance'
 const DEFAULT_MIN_NATIVE_MAINNET= 0.3
 const DEFAULT_MIN_NATIVE_TESTNET= 0.2
-const DEFAULT_MIN_LINK = 3
+const DEFAULT_MIN_LINK = 3.6
 
 const ENVIRONMENT = {
   "fxb_stag": [
