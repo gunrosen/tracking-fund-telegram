@@ -38,7 +38,7 @@ const ENVIRONMENT = {
       chain: Web3SupportNetwork.BSC_MAINNET,
       type: TrackingType.NATIVE,
       destination: '0x96D7D0CB2af031820Bc6D563ecA14FE4044f1C50',
-      min: DEFAULT_MIN_NATIVE_MAINNET
+      min: 0.18
     },
     {
       text: "LINK fund",
@@ -199,7 +199,7 @@ const ENVIRONMENT = {
       chain: Web3SupportNetwork.BSC_MAINNET,
       type: TrackingType.NATIVE,
       destination: '0x840AAed113F39C8bfC2d0C0497bC12Ee0B5f28BF',
-      min: 0.6
+      min: 0.15
     },
     {
       text: "LINK fund",
