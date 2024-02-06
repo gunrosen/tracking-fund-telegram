@@ -26,18 +26,18 @@ export const faucetToken = async () => {
 }
 
 export const faucetTokenByChain = async (chain: string) => {
-    let rpc = null
+    let rpcEndpoint = null
     switch (chain) {
         case 'bnb-testnet': {
-            rpc = getRPC(Web3SupportNetwork.BSC_TESTNET)
+            rpcEndpoint = getRPC(Web3SupportNetwork.BSC_TESTNET)
             break
         }
         case 'sepolia': {
-            rpc = getRPC(Web3SupportNetwork.ETHEREUM_SEPOLIA)
+            rpcEndpoint = getRPC(Web3SupportNetwork.ETHEREUM_SEPOLIA)
             break
         }
         case 'goerli': {
-            rpc = getRPC(Web3SupportNetwork.ETHEREUM_GOERLI)
+            rpcEndpoint = getRPC(Web3SupportNetwork.ETHEREUM_GOERLI)
             break
         }
         default: {
@@ -45,7 +45,20 @@ export const faucetTokenByChain = async (chain: string) => {
             return
         }
     }
-    const provider = new JsonRpcProvider(rpc)
+    const provider = await retryable(async () => {
+      const rpcProvider =new JsonRpcProvider(rpcEndpoint)
+      rpcProvider.on('error', (error) => {
+        console.log(`${chain}: RPC error`)
+        rpcProvider.destroy()
+      })
+      await rpcProvider._detectNetwork()
+      return rpcProvider
+    },
+      async (error) => {
+        console.log(`${chain}: RPC error after retry`)
+      }
+      ,3)
+
     let myWallet = new ethers.Wallet(RECIPIENT_PRIVATE_KEY)
     myWallet = myWallet.connect(provider)
     const walletAddress = await myWallet.getAddress()
