@@ -64,7 +64,16 @@ export const faucetTokenByChain = async (chain: string) => {
     const walletAddress = await myWallet.getAddress()
 
     // SendToVault If need
-    await sendFundToVault(myWallet, walletAddress, provider, chain)
+    const DELTA = 0.002
+    await retryable(
+        async (retryCount) => {
+            await sendFundToVault(myWallet, walletAddress, provider, chain, (retryCount + 1) * DELTA)
+        },
+        async () => {
+            console.log(`${chain}: send fund to vault fail constantly after retry`)
+        },
+        3
+    )
 
     console.log(`${chain}: Request faucet to ${walletAddress}`)
     let transactionTx: string = await retryable(
@@ -94,7 +103,15 @@ export const faucetTokenByChain = async (chain: string) => {
         }
     }
 
-    await sendFundToVault(myWallet, walletAddress, provider, chain)
+    await retryable(
+        async (retryCount) => {
+            await sendFundToVault(myWallet, walletAddress, provider, chain, (retryCount + 1) * DELTA)
+        },
+        async () => {
+            console.log(`${chain}: send fund to vault fail constantly after retry`)
+        },
+        3
+    )
 
 }
 
@@ -130,7 +147,7 @@ const faucetChainStack = async (walletAddress: string, chain: string): Promise<s
             } else {
                 // try to catch: goerli:  { error: "Cannot read properties of undefined (reading 'success')" }
                 // error from chainstacks
-                console.error(`${chain}: `, error)
+                console.error(`${chain}: `, errorData?.error, errorData?.error?.code , errorData?.error?.message, error)
                 throw error
             }
         } else {
@@ -143,7 +160,7 @@ const faucetChainStack = async (walletAddress: string, chain: string): Promise<s
 Error: insufficient funds for intrinsic transaction cost (transaction="0x",
 info={ "error": { "code": -32000, "message": "insufficient funds for gas * price + value: balance 500000000000000000, tx cost 500100000000000000, overshot 100000000000000" } }, code=INSUFFICIENT_FUNDS, version=6.9.0)
  */
-const sendFundToVault = async (myWallet: Wallet, walletAddress: string, provider: JsonRpcProvider, chain: string) => {
+const sendFundToVault = async (myWallet: Wallet, walletAddress: string, provider: JsonRpcProvider, chain: string, delta: number) => {
     try {
         const balance = await provider.getBalance(walletAddress)
         const gasAmount = await provider.estimateGas({
@@ -152,7 +169,7 @@ const sendFundToVault = async (myWallet: Wallet, walletAddress: string, provider
         });
         const gasPrice = (await provider.getFeeData()).gasPrice
         console.log(`${chain}:Balance: ${formatEther(balance)}, gasAmount: ${gasAmount}, gasPrice: ${gasPrice}`)
-        const amountCanSend = balance - gasAmount * gasPrice - parseEther("0.002")
+        const amountCanSend = balance - gasAmount * gasPrice - parseEther(delta.toString())
         if (amountCanSend > 0) {
             console.log(`${chain}:Can be sent: ${formatEther(amountCanSend)}`)
             const tx = {
@@ -167,6 +184,7 @@ const sendFundToVault = async (myWallet: Wallet, walletAddress: string, provider
         }
     } catch (error) {
         console.error(`${chain}:`, error);
+        throw error
     }
 }
 
