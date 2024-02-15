@@ -11,7 +11,7 @@ import {Web3SupportNetwork} from "../types";
 
 require('dotenv').config()
 
-const chains = ['bnb-testnet', 'sepolia', 'goerli']
+const chains = ['bnb-testnet', 'sepolia', 'goerli', 'holesky', 'zksync-testnet', 'scroll-sepolia-testnet']
 const RECIPIENT_PRIVATE_KEY = process.env.FAUCET_RECIPIENT_PRIVATE_KEY || ''
 const FAUCET_VAULT_ADDRESS = process.env.FAUCET_VAULT_ADDRESS || ''
 const FAUCET_CHAINSTACK_API = process.env.FAUCET_CHAINSTACK_API || ''
