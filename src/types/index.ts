@@ -11,6 +11,9 @@ export enum Web3SupportNetwork {
   FANTOM_TESTNET = 'fantom_testnet',
   ETHEREUM_GOERLI= 'eth_goerli',
   ETHEREUM_SEPOLIA= 'eth_sepolia',
+  ETHEREUM_HOLESKY = 'eth_holesky',
+  ZKSYNC_SEPOLIA_TESTNET = 'zksync-testnet',
+  SCROLL_SEPOLIA = 'scroll_sepolia',
 }
 
 export interface Web3Network<Web3SupportNetwork> {

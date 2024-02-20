@@ -40,6 +40,18 @@ export const faucetTokenByChain = async (chain: string) => {
             rpcEndpoint = getRPC(Web3SupportNetwork.ETHEREUM_GOERLI)
             break
         }
+        case 'holesky': {
+          rpcEndpoint = getRPC(Web3SupportNetwork.ETHEREUM_HOLESKY)
+          break
+        }
+        case 'zksync-testnet': {
+          rpcEndpoint = getRPC(Web3SupportNetwork.ZKSYNC_SEPOLIA_TESTNET)
+          break
+        }
+        case 'scroll-sepolia-testnet': {
+          rpcEndpoint = getRPC(Web3SupportNetwork.SCROLL_SEPOLIA)
+          break
+        }
         default: {
             console.error(`Do not support ${chain}`)
             return

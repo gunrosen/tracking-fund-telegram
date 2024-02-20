@@ -52,6 +52,12 @@ export const getRPC = (chain: Web3SupportNetwork): string => {
       return 'https://ethereum-goerli.publicnode.com'
     case Web3SupportNetwork.ETHEREUM_SEPOLIA:
       return 'https://ethereum-sepolia.publicnode.com'
+    case Web3SupportNetwork.ETHEREUM_HOLESKY:
+      return 'https://ethereum-holesky.publicnode.com'
+    case Web3SupportNetwork.ZKSYNC_SEPOLIA_TESTNET:
+      return 'https://sepolia.era.zksync.dev'
+    case Web3SupportNetwork.SCROLL_SEPOLIA:
+      return 'https://sepolia-rpc.scroll.io'
     default:
       return ''
   }
