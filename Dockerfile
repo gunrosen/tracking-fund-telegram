@@ -5,6 +5,7 @@ COPY package.json ./
 COPY package-lock.json ./
 
 RUN npm i -g pm2
+RUN pm2 install pm2-logrotate
 RUN npm install
 COPY . ./
 RUN npm run build
